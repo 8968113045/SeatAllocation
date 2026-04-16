@@ -334,8 +334,7 @@
             this.txtPwDDB.PasswordChar = '*';
             this.txtPwDDB.Size = new System.Drawing.Size(144, 21);
             this.txtPwDDB.TabIndex = 4;
-            this.txtPwDDB.Text = "admin!123";
-//this.txtPwDDB.TextChanged += new System.EventHandler(this.txtPwDDB_TextChanged);
+            this.txtPwDDB.Text = "123";
             // 
             // txtUserIdDB
             // 
@@ -347,7 +346,7 @@
             this.txtUserIdDB.Size = new System.Drawing.Size(144, 21);
             this.txtUserIdDB.TabIndex = 3;
             this.txtUserIdDB.Text = "sa";
-          //  this.txtUserIdDB.TextChanged += new System.EventHandler(this.txtUserIdDB_TextChanged);
+            this.txtUserIdDB.TextChanged += new System.EventHandler(this.txtUserIdDB_TextChanged_1);
             // 
             // txtServerDB
             // 
@@ -357,7 +356,7 @@
             this.txtServerDB.Name = "txtServerDB";
             this.txtServerDB.Size = new System.Drawing.Size(144, 21);
             this.txtServerDB.TabIndex = 1;
-            this.txtServerDB.Text = "E-NIGAM01";
+            this.txtServerDB.Text = "HP";
             // 
             // label10
             // 
@@ -379,7 +378,7 @@
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(144, 21);
             this.txtDBName.TabIndex = 2;
-            this.txtDBName.Text = "iti2024firstresult";
+            this.txtDBName.Text = "ItiPunjabAdmissions2024_Main";
             this.txtDBName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // gbLogin

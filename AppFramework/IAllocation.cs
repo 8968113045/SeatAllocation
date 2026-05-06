@@ -9,12 +9,12 @@ namespace AppFramework
 {
     public interface IAllocation
     {
-        ActionOutput InItAllocation(int roundno);         
+        ActionOutput InItAllocation(int roundno, int stream);         
         ActionOutput PrepareSeat();
         ActionOutput PrepareEligibleCandidate();
         ActionOutput PreparePreviousAllotment();
         ActionOutput CreateVirtualChoice();        
-        ActionOutput AllotSeat();       
+        ActionOutput AllotSeat();
         ActionOutput PrepareAllotmentSummary();
         ActionOutput UpdateApplicationAfterAllocation();
         DataTable GetVirtualChoice(string rollno);
@@ -25,5 +25,7 @@ namespace AppFramework
         ActionOutput VirtualCreationNew();
         void SetRoundNo(int roundno);
 
+        ActionOutput AllotSeatNew();
+        ActionOutput PrepareAllotmentSummaryNew();
     }
 }

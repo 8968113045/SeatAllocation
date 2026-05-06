@@ -55,6 +55,7 @@ namespace DASeatAllocation
                 AppConfiguration.UserId = txtUserId.Text.Trim();
                 AppConfiguration.Role = res.data.ToString();
                 AppConfiguration.RoundNo = Convert.ToInt32(cmbRound.SelectedItem);
+                AppConfiguration.Stream = Convert.ToInt32(((DataRowView)comboBox1.SelectedItem)["id"]);
                 DAL.boardId = AppConfiguration.BoardId;
                 DAL.roundNo = AppConfiguration.RoundNo;
                 ICommon objCommon = ObjectFactory.GetCommonObject();
@@ -107,7 +108,8 @@ namespace DASeatAllocation
                 MessageBox.Show("Kindly enter database credentials");
                 return;
             }
-            string connString = "Data Source = " + txtServerDB.Text.Trim() + "; database=" + txtDBName.Text.Trim() + ";uid=" + txtUserIdDB.Text.Trim() + ";pwd=" + txtPwDDB.Text.Trim();
+            //string connString = "Data Source = " + txtServerDB.Text.Trim() + "; database=" + txtDBName.Text.Trim() + ";uid=" + txtUserIdDB.Text.Trim() + ";pwd=" + txtPwDDB.Text.Trim();
+            string connString = "Data Source = " + txtServerDB.Text.Trim() + "; database=" + txtDBName.Text.Trim() + ";Integrated Security=SSPI";
             SqlConnection cn = null;
             try
             {
@@ -173,6 +175,17 @@ namespace DASeatAllocation
             cmbRound.SelectedIndex = 0;
         }
 
+        private void LoadStreams(string boardId)
+        {
+            DataTable dt = objDAL.GetDataTableUsingCommand("select id, description from MD_Stream WHERE boardId ='" + boardId + "'");
+            if(dt != null && dt.Rows.Count > 0)
+            {
+                comboBox1.DataSource = dt;
+                comboBox1.DisplayMember = "description";
+                comboBox1.ValueMember = "id";
+            }
+        }
+
         private void DisbaleLoginPanel(string msg = "")
         {
             if (msg.Length > 0)
@@ -186,6 +199,7 @@ namespace DASeatAllocation
         private void cmbBoardId_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadBoardDetails(cmbBoardId.SelectedItem.ToString());
+            LoadStreams(cmbBoardId.SelectedItem.ToString());
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -200,6 +214,31 @@ namespace DASeatAllocation
         }
 
         private void txtPwDDB_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbRound_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void gbLogin_Enter(object sender, EventArgs e)
         {
 
         }

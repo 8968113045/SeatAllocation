@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Text;
+using AppFrameworkNew;
 
 namespace BAL
 {
@@ -13,9 +14,11 @@ namespace BAL
     {
         protected AllocationSqlHelper objSql = null;
         protected int roundNo = -1;
-        public virtual ActionOutput InItAllocation(int roundNo)
+        protected int stream = -1;
+        public virtual ActionOutput InItAllocation(int roundNo, int stream)
         {
             this.roundNo = roundNo;
+            this.stream = stream;
             objSql = new AllocationSqlHelper();
             objSql.StartConnection();
             return new ActionOutput(ActionStatus.Success, "");
@@ -130,7 +133,6 @@ namespace BAL
                     //objApplicantAllotmentDetail = null;
                     wlCand = null;
 
-                   
 
                     //Load applicant details
                     candRollNo = Applicants.Dequeue();
@@ -151,7 +153,7 @@ namespace BAL
                     //wlName = strVirtualChoice.Split(':')[0];
                     //rank = Convert.ToDouble(strVirtualChoice.Split(':')[1]);
                     wlName = AllChoices[candRollNo].VChoices[PIList[candRollNo] - 1].VChoice;
-                    if (wlName == "100724.11075NN.79.G1.NCVT.HS.OP.B")
+                    if (wlName == "100545.11031NN.79.G1.NCVT.HS.OP.B")
                     {
                         var s = candRollNo;
                     }
@@ -162,8 +164,6 @@ namespace BAL
                         RejectCandidate(candRollNo);
                         continue;
                     }
-
-
 
 
                     if ((WaitListArray.ContainsKey(wlName)))
@@ -260,7 +260,7 @@ namespace BAL
                 foreach (WaitListNode x in SameRankCandidates)
                 {
                     objWaitList.Enqueue(x);
-            }
+                }
             }
 
         }
@@ -389,7 +389,7 @@ namespace BAL
 
             foreach (var wl in WaitListArray)
             {
-                
+
                 wlKeyElements = wl.Key.Split('.');
                 sequence = wl.Key.Substring(wlKeyElements[0].Length + wlKeyElements[1].Length + 2);
                 dtDereserve.Rows.Add(new object[] { iterationSeq, wlKeyElements[0], wlKeyElements[1], sequence, Seats[wl.Key], wl.Value.size(), 0, 0 });
@@ -627,6 +627,256 @@ group by A.Sequence order by A.Sequence").Rows)
 
 
             return new ActionOutput(ActionStatus.Success, "Completed", txt.ToString(), DataType.HTML);
+        }
+
+        public ActionOutput AllotSeatNew()
+        {
+            PreAllotmentProcessing();
+
+            DataTable dtEligibleCandidates = objSql.GetDataTableUsingCommand("Select RollNo from XT_VirtualChoice");
+
+            LoadPreviousAllotment();
+            LoadVirtualChoice();
+
+            bool isIterationRequired = true;
+            int iterationSeq = 1;
+
+            while (isIterationRequired)
+            {
+                dtSeats = objSql.GetDataTableUsingCommand("XP_GetProcessingSeat", CommandType.StoredProcedure);
+
+                Seats = new Dictionary<string, int>();
+                WaitListArrayNew = new Dictionary<string, WaitListNew>(dtSeats.Rows.Count);
+
+                foreach (DataRow dr in dtSeats.Rows)
+                {
+                    string wlKey = dr["WLKey"].ToString();
+                    int capacity = Convert.ToInt32(dr["TSeat"]);
+
+                    Seats[wlKey] = capacity;
+                    WaitListArrayNew[wlKey] = new WaitListNew(); // heap-based class
+                }
+
+                PIList = new Dictionary<string, short>(dtEligibleCandidates.Rows.Count);
+                Applicants = new Queue<string>(dtEligibleCandidates.Rows.Count);
+
+                foreach (DataRow dr in dtEligibleCandidates.Rows)
+                {
+                    string roll = dr["RollNo"].ToString();
+
+                    Applicants.Enqueue(roll);
+                    PIList[roll] = 1;
+                }
+
+                while (Applicants.Count > 0)
+                {
+                    string candRollNo = Applicants.Dequeue();
+
+                    // No choices
+                    if (!AllChoices.ContainsKey(candRollNo) || AllChoices[candRollNo].VChoiceCount == 0)
+                        continue;
+
+                    int choiceIndex = PIList[candRollNo] - 1;
+
+                    if (choiceIndex >= AllChoices[candRollNo].VChoiceCount)
+                        continue;
+
+                    var choice = AllChoices[candRollNo].VChoices[choiceIndex];
+
+                    string wlName = choice.VChoice;
+                    double rank = choice.Rank;
+
+                    // Invalid WL / No seats
+                    if (!Seats.ContainsKey(wlName) || Seats[wlName] == 0 || !WaitListArrayNew.ContainsKey(wlName))
+                    {
+                        RejectCandidateNew(candRollNo);
+                        continue;
+                    }
+
+                    var waitList = WaitListArrayNew[wlName];
+
+                    int retainStatus = 0;
+
+                    if (objAllAllotmentDetails != null &&
+                        objAllAllotmentDetails.ContainsKey(candRollNo))
+                    {
+                        var prev = objAllAllotmentDetails[candRollNo];
+
+                        string prevWL = prev.Instcd + "." + prev.Brcd + "." + prev.Sequence;
+
+                        if (prevWL == wlName)
+                        {
+                            retainStatus = 1;
+                        }
+                    }
+                    
+                    bool allocated = TryAllocate(waitList, wlName, candRollNo, rank, retainStatus);
+
+                    if (!allocated)
+                    {
+                        RejectCandidateNew(candRollNo);
+                    }
+                }
+
+                SaveIterationResultNew(iterationSeq);
+
+                isIterationRequired = DereserveSeat(iterationSeq);
+                iterationSeq++;
+            }
+
+            return new ActionOutput(ActionStatus.Success, "");
+        }
+
+        private bool TryAllocate(WaitListNew waitList, string wlName, string rollNo, double rank, int retainStatus)
+        {
+            int capacity = Seats[wlName];
+
+            // If Seat is empty
+            if (waitList.size() < capacity)
+            {
+                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
+                return true;
+            }
+
+            // Worst candidate
+            var worst = waitList.PeekMax();
+
+            if (worst == null)
+                return false;
+
+            double maxRank = worst.rank;
+
+            // Retained candidate gets priority
+            if (retainStatus == 1)
+            {
+                waitList.RemoveMax();
+
+                RejectCandidateNew(worst.rollNo);
+
+                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
+                return true;
+            }
+
+            // Better rank replaces worst
+            if (rank < maxRank)
+            {
+                waitList.RemoveMax();
+
+                RejectCandidateNew(worst.rollNo);
+
+                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
+                return true;
+            }
+
+            // Not selected
+            return false;
+        }
+
+        private void RejectCandidateNew(string candRollno)
+        {
+            PIList[candRollno] += 1;
+
+            if (AllChoices[candRollno].VChoiceCount >= PIList[candRollno])
+            {
+                Applicants.Enqueue(candRollno);
+            }
+        }
+
+        Dictionary<string, WaitListNew> WaitListArrayNew = default(Dictionary<string, WaitListNew>);
+
+        public ActionOutput PrepareAllotmentSummaryNew()
+        {
+            objSql.ExecuteCommand("truncate table XT_Allotment;truncate table XT_AllotmentSummary");
+            string sequence = string.Empty;
+            string[] wlKeyElements = null;
+            DataTable dtWaitList = new DataTable();
+            dtWaitList.Columns.Add("Instcd");
+            dtWaitList.Columns.Add("Brcd");
+            dtWaitList.Columns.Add("Sequence");
+            dtWaitList.Columns.Add("InItSeats");
+            dtWaitList.Columns.Add("NewSeats");
+            dtWaitList.Columns.Add("Allotted");
+            dtWaitList.Columns.Add("OpeningRank");
+            dtWaitList.Columns.Add("ClosingRank");
+            dtWaitList.Columns.Add("OpeningRank_NewCand");
+            dtWaitList.Columns.Add("ClosingRank_NewCand");
+            dtWaitList.Columns.Add("DereserveFrom");
+            dtWaitList.Columns.Add("DereserveTo");
+
+            //Save Allotment
+            DataTable dtAllotment = new DataTable();
+            dtAllotment.Columns.Add("RollNo");
+            dtAllotment.Columns.Add("Instcd");
+            dtAllotment.Columns.Add("Brcd");
+            dtAllotment.Columns.Add("Sequence");
+            dtAllotment.Columns.Add("Rank");
+            foreach (var wl in WaitListArrayNew)
+            {
+                wlKeyElements = wl.Key.Split('.');
+                sequence = wl.Key.Substring(wlKeyElements[0].Length + wlKeyElements[1].Length + 2);
+                dtWaitList.Rows.Add(new object[] { wlKeyElements[0], wlKeyElements[1], sequence, 0, Seats[wl.Key], wl.Value.size(), 0, 0, 0, 0, 0, 0 });
+                foreach (WaitListNodeNew cand in wl.Value.ToList())
+                {
+                    dtAllotment.Rows.Add(new object[] { cand.rollNo, wlKeyElements[0], wlKeyElements[1], sequence, cand.rank });
+                }
+            }
+            objSql.SaveTableUsingBulkCopy(ref dtAllotment, "XT_Allotment", 500);
+            objSql.SaveTableUsingBulkCopy(ref dtWaitList, "XT_AllotmentSummary", 500);
+            objSql.ExecuteProcedure("XP_UpdateAllotmentSummary");
+            return new ActionOutput(ActionStatus.Success, "Completed");
+        }
+
+        public void SaveIterationResultNew(int iterationSeq)
+        {
+            string sequence = string.Empty;
+            string[] wlKeyElements = null;
+            //Save into Seat Dereserve
+            DataTable dtDereserve = new DataTable();
+            dtDereserve.Columns.Add("IterationNo");
+            dtDereserve.Columns.Add("Instcd");
+            dtDereserve.Columns.Add("Brcd");
+            dtDereserve.Columns.Add("Sequence");
+            dtDereserve.Columns.Add("Seats");
+            dtDereserve.Columns.Add("Allotted");
+            dtDereserve.Columns.Add("DereserveFrom");
+            dtDereserve.Columns.Add("DereserveTo");
+
+            //Save Allotment
+            DataTable dtAllotment = new DataTable();
+            dtAllotment.Columns.Add("IterationNo");
+            dtAllotment.Columns.Add("RollNo");
+            dtAllotment.Columns.Add("Instcd");
+            dtAllotment.Columns.Add("Brcd");
+            dtAllotment.Columns.Add("Sequence");
+            dtAllotment.Columns.Add("Rank");
+
+            foreach (var wl in WaitListArrayNew)
+            {
+
+                wlKeyElements = wl.Key.Split('.');
+                sequence = wl.Key.Substring(wlKeyElements[0].Length + wlKeyElements[1].Length + 2);
+                dtDereserve.Rows.Add(new object[] { iterationSeq, wlKeyElements[0], wlKeyElements[1], sequence, Seats[wl.Key], wl.Value.size(), 0, 0 });
+                foreach (WaitListNodeNew cand in wl.Value.ToList())
+                {
+                    if (cand.rollNo == "241250100364")
+                    {
+                        var s = cand.rollNo;
+                    }
+                    dtAllotment.Rows.Add(new object[] { iterationSeq, cand.rollNo, wlKeyElements[0], wlKeyElements[1], sequence, cand.rank });
+                }
+
+
+            }
+
+            objSql.SaveTableUsingBulkCopy(ref dtAllotment, "XT_Allotted", 500);
+            dtAllotment.Clear();
+            dtAllotment = null;
+
+            objSql.SaveTableUsingBulkCopy(ref dtDereserve, "XT_Dereserve", 500);
+            dtDereserve.Clear();
+            dtDereserve = null;
+
+            objSql.ExecuteCommand("update A Set A.tSeat=B.Seats,A.aSeat=B.Allotted,A.bSeat=B.Seats-B.Allotted From XT_PSeat A inner join XT_Dereserve B on A.Instcd=B.Instcd and a.Brcd=B.Brcd and A.Sequence=B.Sequence and B.IterationNo=(select max(IterationNo) from XT_Dereserve) ");
         }
     }
 }

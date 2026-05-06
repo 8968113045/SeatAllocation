@@ -79,6 +79,7 @@
     <Compile Include="SeatDetail.cs" />
     <Compile Include="SqlHelper.cs" />
     <Compile Include="SupportClasses.cs" />
+    <Compile Include="SupportClassNew.cs" />
     <Compile Include="VirtualChoices.cs" />
     <Compile Include="WaitListCandidate.cs" />
   </ItemGroup>

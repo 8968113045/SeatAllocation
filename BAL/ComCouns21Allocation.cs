@@ -35,6 +35,7 @@ namespace BAL
 
         protected const string DBParam_BoardId = "boardId";
         protected const string DBParam_RoundNo = "roundNo";
+        protected const string DBParam_Stream = "stream";
         protected const string DBParam_RollNo = "rollNo";
         protected const string DBParam_CandCategory = "category";
         protected const string DBParam_CandSubcategory = "subcategory";
@@ -59,20 +60,21 @@ namespace BAL
         protected string connectionString;
 
         protected string DBProc_PrepareEligibleCandidate_New = "XApp_CC_PrepareEligibleCandidate";
-        protected string DBProc_Virtual_Creation = "Virtual_Creation_New";
+        protected string DBProc_Virtual_Creation = "Virtual_Creation_Latest";
 
         public ComCouns21Allocation() : base()
         {
-            boardId = "125012421";
+            boardId = "159012621";
             connectionString = ObjectFactory.GetCommonObject().GetConnectionString();
         }
 
         #region InputPreparation
         public override ActionOutput PrepareSeat()
         {
-            SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, "125012421");
-            sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
+            SqlParameter[] sqlParameters = new SqlParameter[3];
+            sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, "159012621");
+            sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PrepareSeat, sqlParameters);
             int totalSeat = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(sum(tseat),0) from XT_Seat").Tables[0].Rows[0][0]);
             return new ActionOutput(ActionStatus.Success, "Completed:" + totalSeat.ToString());
@@ -80,9 +82,10 @@ namespace BAL
 
         public override ActionOutput PrepareEligibleCandidate()
         {
-            SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, "125012421");
-            sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
+            SqlParameter[] sqlParameters = new SqlParameter[3];
+            sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, "159012621");
+            sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PrepareEligibleCandidate_New, sqlParameters);
             int eligibleCandidateCount = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_EligibleCandidate").Tables[0].Rows[0][0]);
             return new ActionOutput(ActionStatus.Success, "Completed:" + eligibleCandidateCount.ToString());
@@ -90,9 +93,10 @@ namespace BAL
 
         public override ActionOutput PreparePreviousAllotment()
         {
-            SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
+            SqlParameter[] sqlParameters = new SqlParameter[3];
+            sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PreparePreviousAllotment, sqlParameters);
             int previousAllotment = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_PreviousAllotment").Tables[0].Rows[0][0]);
             return new ActionOutput(ActionStatus.Success, "Completed:" + previousAllotment.ToString());
@@ -101,9 +105,10 @@ namespace BAL
         public override ActionOutput VirtualCreationNew()
         {
             LoadSeatDetails();
-            SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
+            SqlParameter[] sqlParameters = new SqlParameter[3];
+            sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_Virtual_Creation, sqlParameters);
             //int previousAllotment = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_PreviousAllotment").Tables[0].Rows[0][0]);
             return new ActionOutput(ActionStatus.Success, "Completed:");
@@ -470,9 +475,10 @@ namespace BAL
         protected void LoadSeatDetails()
         {
             SeatRankTypeMapping = new Dictionary<string, string>();
-            SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
+            SqlParameter[] sqlParameters = new SqlParameter[3];
+            sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtSeats = SqlHelper.ExecuteDataset(connectionString, DBProc_GetSeatRankTypeMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtSeats.Rows)
             {

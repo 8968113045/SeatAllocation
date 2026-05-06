@@ -42,6 +42,7 @@ namespace DASeatAllocation
         public static string SubHeader { get; set; }
         public static string BoardId { get; set; }
         public static int RoundNo { get; set; }
+        public static int Stream {  get; set; }
 
         public static string GetStatusTitle(ActionStatus status)
         {

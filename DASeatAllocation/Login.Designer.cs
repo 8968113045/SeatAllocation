@@ -55,7 +55,9 @@
             this.txtDBName = new System.Windows.Forms.TextBox();
             this.gbLogin = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -75,7 +77,7 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(48, 29);
+            this.label1.Location = new System.Drawing.Point(40, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 16);
             this.label1.TabIndex = 0;
@@ -85,7 +87,7 @@
             // 
             this.txtUserId.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtUserId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUserId.Location = new System.Drawing.Point(113, 28);
+            this.txtUserId.Location = new System.Drawing.Point(105, 28);
             this.txtUserId.Name = "txtUserId";
             this.txtUserId.Size = new System.Drawing.Size(147, 21);
             this.txtUserId.TabIndex = 9;
@@ -99,9 +101,9 @@
             this.btnSubmit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnSubmit.Location = new System.Drawing.Point(278, 83);
+            this.btnSubmit.Location = new System.Drawing.Point(258, 83);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(270, 36);
+            this.btnSubmit.Size = new System.Drawing.Size(249, 36);
             this.btnSubmit.TabIndex = 11;
             this.btnSubmit.Text = "Submit";
             this.btnSubmit.UseVisualStyleBackColor = false;
@@ -113,9 +115,9 @@
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FloralWhite;
-            this.label2.Location = new System.Drawing.Point(117, 0);
+            this.label2.Location = new System.Drawing.Point(183, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(336, 44);
+            this.label2.Size = new System.Drawing.Size(535, 44);
             this.label2.TabIndex = 3;
             this.label2.Text = "SEAT ALLOCATION";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -125,7 +127,7 @@
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(307, 29);
+            this.label3.Location = new System.Drawing.Point(279, 29);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 16);
             this.label3.TabIndex = 4;
@@ -135,7 +137,7 @@
             // 
             this.txtPwD.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtPwD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPwD.Location = new System.Drawing.Point(388, 28);
+            this.txtPwD.Location = new System.Drawing.Point(360, 28);
             this.txtPwD.Name = "txtPwD";
             this.txtPwD.PasswordChar = '*';
             this.txtPwD.Size = new System.Drawing.Size(144, 21);
@@ -148,9 +150,9 @@
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Cornsilk;
-            this.label4.Location = new System.Drawing.Point(117, 44);
+            this.label4.Location = new System.Drawing.Point(183, 44);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(336, 45);
+            this.label4.Size = new System.Drawing.Size(535, 45);
             this.label4.TabIndex = 6;
             this.label4.Text = " Login Page";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -164,7 +166,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.Location = new System.Drawing.Point(3, 83);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(269, 36);
+            this.btnCancel.Size = new System.Drawing.Size(249, 36);
             this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -175,7 +177,7 @@
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(58, 4);
+            this.label5.Location = new System.Drawing.Point(50, 4);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 16);
             this.label5.TabIndex = 9;
@@ -186,7 +188,7 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(306, 4);
+            this.label6.Location = new System.Drawing.Point(278, 4);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(76, 16);
             this.label6.TabIndex = 10;
@@ -198,10 +200,11 @@
             this.cmbRound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbRound.FormattingEnabled = true;
-            this.cmbRound.Location = new System.Drawing.Point(388, 3);
+            this.cmbRound.Location = new System.Drawing.Point(360, 3);
             this.cmbRound.Name = "cmbRound";
             this.cmbRound.Size = new System.Drawing.Size(42, 23);
             this.cmbRound.TabIndex = 8;
+            this.cmbRound.SelectedIndexChanged += new System.EventHandler(this.cmbRound_SelectedIndexChanged);
             // 
             // cmbBoardId
             // 
@@ -209,7 +212,7 @@
             this.cmbBoardId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbBoardId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbBoardId.FormattingEnabled = true;
-            this.cmbBoardId.Location = new System.Drawing.Point(113, 3);
+            this.cmbBoardId.Location = new System.Drawing.Point(105, 3);
             this.cmbBoardId.Name = "cmbBoardId";
             this.cmbBoardId.Size = new System.Drawing.Size(86, 23);
             this.cmbBoardId.TabIndex = 7;
@@ -258,7 +261,7 @@
             this.gbDatabase.Controls.Add(this.tableLayoutPanel3);
             this.gbDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbDatabase.ForeColor = System.Drawing.Color.DarkCyan;
-            this.gbDatabase.Location = new System.Drawing.Point(67, 118);
+            this.gbDatabase.Location = new System.Drawing.Point(266, 118);
             this.gbDatabase.Margin = new System.Windows.Forms.Padding(10);
             this.gbDatabase.MaximumSize = new System.Drawing.Size(700, 250);
             this.gbDatabase.Name = "gbDatabase";
@@ -346,7 +349,7 @@
             this.txtUserIdDB.Size = new System.Drawing.Size(144, 21);
             this.txtUserIdDB.TabIndex = 3;
             this.txtUserIdDB.Text = "sa";
-            this.txtUserIdDB.TextChanged += new System.EventHandler(this.txtUserIdDB_TextChanged_1);
+            this.txtUserIdDB.TextChanged += new System.EventHandler(this.txtUserIdDB_TextChanged);
             // 
             // txtServerDB
             // 
@@ -356,7 +359,7 @@
             this.txtServerDB.Name = "txtServerDB";
             this.txtServerDB.Size = new System.Drawing.Size(144, 21);
             this.txtServerDB.TabIndex = 1;
-            this.txtServerDB.Text = "HP";
+            this.txtServerDB.Text = "HP\\SQLEXPRESS";
             // 
             // label10
             // 
@@ -378,7 +381,7 @@
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(144, 21);
             this.txtDBName.TabIndex = 2;
-            this.txtDBName.Text = "ItiPunjabAdmissions2024_Main";
+            this.txtDBName.Text = "PSBTECOUNS2018_Renew";
             this.txtDBName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // gbLogin
@@ -388,22 +391,24 @@
             this.gbLogin.Controls.Add(this.tableLayoutPanel4);
             this.gbLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbLogin.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.gbLogin.Location = new System.Drawing.Point(67, 307);
+            this.gbLogin.Location = new System.Drawing.Point(100, 307);
             this.gbLogin.Margin = new System.Windows.Forms.Padding(10);
-            this.gbLogin.MaximumSize = new System.Drawing.Size(700, 250);
+            this.gbLogin.MaximumSize = new System.Drawing.Size(1000, 250);
             this.gbLogin.Name = "gbLogin";
-            this.gbLogin.Size = new System.Drawing.Size(557, 165);
+            this.gbLogin.Size = new System.Drawing.Size(889, 165);
             this.gbLogin.TabIndex = 18;
             this.gbLogin.TabStop = false;
             this.gbLogin.Text = "Login Credentials";
+            this.gbLogin.Enter += new System.EventHandler(this.gbLogin_Enter);
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 4;
+            this.tableLayoutPanel4.ColumnCount = 5;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 371F));
             this.tableLayoutPanel4.Controls.Add(this.btnCancel, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.btnSubmit, 2, 3);
             this.tableLayoutPanel4.Controls.Add(this.txtUserId, 1, 1);
@@ -415,6 +420,8 @@
             this.tableLayoutPanel4.Controls.Add(this.txtPwD, 3, 1);
             this.tableLayoutPanel4.Controls.Add(this.label5, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.label11, 0, 2);
+            this.tableLayoutPanel4.Controls.Add(this.label12, 4, 0);
+            this.tableLayoutPanel4.Controls.Add(this.comboBox1, 4, 1);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 22);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -424,8 +431,21 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(551, 122);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(883, 122);
             this.tableLayoutPanel4.TabIndex = 13;
+            this.tableLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel4_Paint);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(513, 28);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(367, 23);
+            this.comboBox1.TabIndex = 15;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label11
             // 
@@ -436,6 +456,19 @@
             this.label11.Size = new System.Drawing.Size(90, 16);
             this.label11.TabIndex = 13;
             this.label11.Text = "Select Task";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(513, 0);
+            this.label12.Name = "label12";
+            this.label12.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label12.Size = new System.Drawing.Size(62, 18);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Stream";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -455,7 +488,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 189F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(686, 583);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1051, 583);
             this.tableLayoutPanel1.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -469,12 +502,12 @@
             this.tableLayoutPanel2.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.pictureBox2, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(60, 3);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(93, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(571, 89);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(903, 89);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // pictureBox1
@@ -485,7 +518,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.tableLayoutPanel2.SetRowSpan(this.pictureBox1, 2);
-            this.pictureBox1.Size = new System.Drawing.Size(108, 83);
+            this.pictureBox1.Size = new System.Drawing.Size(174, 83);
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
@@ -494,10 +527,10 @@
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox2.Location = new System.Drawing.Point(459, 3);
+            this.pictureBox2.Location = new System.Drawing.Point(724, 3);
             this.pictureBox2.Name = "pictureBox2";
             this.tableLayoutPanel2.SetRowSpan(this.pictureBox2, 2);
-            this.pictureBox2.Size = new System.Drawing.Size(109, 83);
+            this.pictureBox2.Size = new System.Drawing.Size(176, 83);
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
             // 
@@ -506,7 +539,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(686, 609);
+            this.ClientSize = new System.Drawing.Size(1051, 609);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Login";
             this.Text = "Seat Allocation-Login";
@@ -560,5 +593,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

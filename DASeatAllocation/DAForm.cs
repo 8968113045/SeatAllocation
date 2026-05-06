@@ -15,6 +15,7 @@ namespace DASeatAllocation
     public partial class DAForm : Form
     {
         int roundno = -1;
+        int stream = -1;
         string boardId = string.Empty;
         IAllocation objAllocation = null;
         ICommon objCommon = null;
@@ -33,6 +34,7 @@ namespace DASeatAllocation
             try
             {
                 roundno = AppConfiguration.RoundNo;
+                stream = AppConfiguration.Stream;
             }
             catch (Exception ex)
             {
@@ -65,7 +67,7 @@ namespace DASeatAllocation
                     
             
 
-            objAllocation.InItAllocation(roundno);
+            objAllocation.InItAllocation(roundno, stream);
 
             objAllocation.PrepareEligibleCandidate();
             objResponse = objAllocation.PrepareSeat();
@@ -90,8 +92,8 @@ namespace DASeatAllocation
 
         private void btnAllotment_Click(object sender, EventArgs e)
         {
-            objResponse = objAllocation.AllotSeat();  
-            objResponse = objAllocation.PrepareAllotmentSummary();
+            objResponse = objAllocation.AllotSeatNew();  
+            objResponse = objAllocation.PrepareAllotmentSummaryNew();
             objResponse = objAllocation.UpdateApplicationAfterAllocation();
             objAllocation.UnloadAllocation();
             lblMessage.Text = "Allocation Completed";

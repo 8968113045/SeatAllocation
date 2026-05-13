@@ -596,6 +596,7 @@ namespace BAL
             SqlConnection connUpdateApp = new SqlConnection(connectionString);
             connUpdateApp.Open();
             SqlCommand cmd = new SqlCommand(DBProc_UpdateApplication, connUpdateApp) { CommandType = CommandType.StoredProcedure };
+            cmd.Parameters.AddWithValue("@" + DBParam_Stream, stream);
             cmd.Parameters.AddWithValue("@" + DBParam_RoundNo, roundNo);
             cmd.Parameters.AddWithValue("@" + DBParam_BoardId, boardId);
             cmd.Parameters.AddWithValue("@" + DBParam_allotmentTable, dtAllotmentTypeTable);

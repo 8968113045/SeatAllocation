@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Text;
 using AppFrameworkNew;
+using System.Xml.Linq;
 
 namespace BAL
 {
@@ -77,8 +78,8 @@ namespace BAL
 
 
         DataTable dtSeats;
-        Dictionary<string, Int16> PIList = default(Dictionary<string, Int16>);
-        Queue<string> Applicants = default(Queue<string>);
+        Dictionary<string, Int16> PIList = new Dictionary<string, Int16>();
+        Queue<string> Applicants = new Queue<string>();
         public ActionOutput AllotSeat()
         {
             PreAllotmentProcessing();
@@ -417,7 +418,7 @@ namespace BAL
         }
         #endregion SeatAllocation
 
-        protected Dictionary<string, AllotmentDetail> objAllAllotmentDetails = default(Dictionary<string, AllotmentDetail>);
+        protected Dictionary<string, AllotmentDetail> objAllAllotmentDetails = new Dictionary<string, AllotmentDetail>();
         public void LoadPreviousAllotment()
         {
             string connectionString = ObjectFactory.GetCommonObject().GetConnectionString();
@@ -632,41 +633,95 @@ group by A.Sequence order by A.Sequence").Rows)
         public ActionOutput AllotSeatNew()
         {
             PreAllotmentProcessing();
-
-            DataTable dtEligibleCandidates = objSql.GetDataTableUsingCommand("Select RollNo from XT_VirtualChoice");
-
             LoadPreviousAllotment();
             LoadVirtualChoice();
 
+            DataTable dtEligibleCandidates = objSql.GetDataTableUsingCommand("Select RollNo from XT_VirtualChoice");
+            dtSeats = objSql.GetDataTableUsingCommand("XP_GetProcessingSeat", CommandType.StoredProcedure);
+
+            Seats = new Dictionary<string, int>();
+            WaitListArrayNew = new Dictionary<string, WaitListNew>(dtSeats.Rows.Count);
+
+            Dictionary<string, AllotmentDetail> actualPreviousAllotment = new Dictionary<string, AllotmentDetail>();
+
+            foreach (DataRow dr in dtSeats.Rows)
+            {
+                string wlKey = dr["WLKey"].ToString();
+                int capacity = Convert.ToInt32(dr["TSeat"]);
+
+                Seats[wlKey] = capacity;
+            }
+
+            List<string> EligibleRoll = new List<string>();
+
+            foreach (DataRow dr in dtEligibleCandidates.Rows)
+            {
+                string roll = dr["RollNo"].ToString();
+                EligibleRoll.Add(roll);
+
+                if (objAllAllotmentDetails != null && objAllAllotmentDetails.ContainsKey(roll))
+                {
+                    AllotmentDetail allotmentDetail = objAllAllotmentDetails[roll];
+
+                    actualPreviousAllotment[roll] = allotmentDetail; //valid previous allotments that are also in current round
+
+                    string[] sq = allotmentDetail.Sequence.Split('.');
+                    string stream = sq[0];
+                    string groupId = sq[1];
+                    string seatType = sq[2];
+                    string quotaId = sq[3];
+                    string CategoryId1 = sq[4];
+                    string gender = sq[6];
+
+                    string seq = string.Empty;
+
+                    if (!allotmentDetail.Brcd.Contains("T")) // Non Fee waiver
+                    {
+                        seq = stream + ".UR.NA.AI.OP" + "." + gender;
+                    }
+                    else
+                    {
+                        seq = stream + "." + groupId + "." + seatType + "." + quotaId + "." + CategoryId1 + "." + gender;
+                    }
+
+                    string prevKey = allotmentDetail.Instcd + "." + allotmentDetail.Brcd + "." + seq;
+                    Seats[prevKey] += 1;
+                }
+
+                Applicants.Enqueue(roll);
+                PIList[roll] = 1;
+            }
+
+
             bool isIterationRequired = true;
             int iterationSeq = 1;
+            List<string> rollsToRemove = new List<string>();
 
             while (isIterationRequired)
             {
-                dtSeats = objSql.GetDataTableUsingCommand("XP_GetProcessingSeat", CommandType.StoredProcedure);
-
-                Seats = new Dictionary<string, int>();
-                WaitListArrayNew = new Dictionary<string, WaitListNew>(dtSeats.Rows.Count);
-
+                foreach(var el in rollsToRemove)
+                {
+                    actualPreviousAllotment.Remove(el);
+                    EligibleRoll.Remove(el);
+                }
+                
                 foreach (DataRow dr in dtSeats.Rows)
                 {
                     string wlKey = dr["WLKey"].ToString();
-                    int capacity = Convert.ToInt32(dr["TSeat"]);
-
-                    Seats[wlKey] = capacity;
                     WaitListArrayNew[wlKey] = new WaitListNew(); // heap-based class
-                }
+                }           
 
-                PIList = new Dictionary<string, short>(dtEligibleCandidates.Rows.Count);
-                Applicants = new Queue<string>(dtEligibleCandidates.Rows.Count);
-
-                foreach (DataRow dr in dtEligibleCandidates.Rows)
+                if (iterationSeq != 1)
                 {
-                    string roll = dr["RollNo"].ToString();
+                    PIList = new Dictionary<string, short>(EligibleRoll.Count);
+                    Applicants = new Queue<string>(EligibleRoll.Count);
 
-                    Applicants.Enqueue(roll);
-                    PIList[roll] = 1;
-                }
+                    foreach (var roll in EligibleRoll.ToList())
+                    {
+                        Applicants.Enqueue(roll);
+                        PIList[roll] = 1;
+                    }
+                }                         
 
                 while (Applicants.Count > 0)
                 {
@@ -692,49 +747,75 @@ group by A.Sequence order by A.Sequence").Rows)
                         RejectCandidateNew(candRollNo);
                         continue;
                     }
-
-                    var waitList = WaitListArrayNew[wlName];
-
-                    int retainStatus = 0;
-
-                    if (objAllAllotmentDetails != null &&
-                        objAllAllotmentDetails.ContainsKey(candRollNo))
-                    {
-                        var prev = objAllAllotmentDetails[candRollNo];
-
-                        string prevWL = prev.Instcd + "." + prev.Brcd + "." + prev.Sequence;
-
-                        if (prevWL == wlName)
-                        {
-                            retainStatus = 1;
-                        }
-                    }
+                    var waitList = WaitListArrayNew[wlName];                   
                     
-                    bool allocated = TryAllocate(waitList, wlName, candRollNo, rank, retainStatus);
+                    bool allocated = TryAllocate(waitList, wlName, candRollNo, rank);
 
                     if (!allocated)
                     {
                         RejectCandidateNew(candRollNo);
                     }
                 }
+                
+                isIterationRequired = false;
+                foreach (var alloted in actualPreviousAllotment)
+                {
+                    int isExisted = 0;
+                    string roll = alloted.Key;
 
-                SaveIterationResultNew(iterationSeq);
+                    foreach (var wl in WaitListArrayNew)
+                    {
+                        int exists = wl.Value.ToList().FindIndex(el => el.rollNo == roll);
+                        if(exists != -1)
+                        {
+                            isExisted ++;
+                            break;
+                        }
+                    }
 
-                isIterationRequired = DereserveSeat(iterationSeq);
+                    if(isExisted == 0)
+                    {
+                        isIterationRequired = true;
+                        AllotmentDetail allotmentDetail = alloted.Value;
+
+                        string[] sq = allotmentDetail.Sequence.Split('.');
+                        string stream = sq[0];
+                        string groupId = sq[1];
+                        string seatType = sq[2];
+                        string quotaId = sq[3];
+                        string CategoryId1 = sq[4];
+                        string gender = sq[6];
+
+                        string seq = string.Empty;
+
+                        if (!allotmentDetail.Brcd.Contains("T")) // Non Fee waiver
+                        {
+                            seq = stream + ".UR.NA.AI.OP" + "." + gender;
+                        }
+                        else
+                        {
+                            seq = stream + "." + groupId + "." + seatType + "." + quotaId + "." + CategoryId1 + "." + gender;
+                        }
+
+                        string prevKey = allotmentDetail.Instcd + "." + allotmentDetail.Brcd + "." + seq;
+                        Seats[prevKey] -= 1;
+                        rollsToRemove.Add(roll);
+                    }
+                }                
                 iterationSeq++;
             }
-
+            SaveIterationResultNew(iterationSeq);
             return new ActionOutput(ActionStatus.Success, "");
         }
 
-        private bool TryAllocate(WaitListNew waitList, string wlName, string rollNo, double rank, int retainStatus)
+        private bool TryAllocate(WaitListNew waitList, string wlName, string rollNo, double rank)
         {
             int capacity = Seats[wlName];
 
             // If Seat is empty
             if (waitList.size() < capacity)
             {
-                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
+                waitList.Enqueue(new WaitListNodeNew(rollNo, rank));
                 return true;
             }
 
@@ -746,17 +827,6 @@ group by A.Sequence order by A.Sequence").Rows)
 
             double maxRank = worst.rank;
 
-            // Retained candidate gets priority
-            if (retainStatus == 1)
-            {
-                waitList.RemoveMax();
-
-                RejectCandidateNew(worst.rollNo);
-
-                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
-                return true;
-            }
-
             // Better rank replaces worst
             if (rank < maxRank)
             {
@@ -764,7 +834,7 @@ group by A.Sequence order by A.Sequence").Rows)
 
                 RejectCandidateNew(worst.rollNo);
 
-                waitList.Enqueue(new WaitListNodeNew(rollNo, rank, retainStatus));
+                waitList.Enqueue(new WaitListNodeNew(rollNo, rank));
                 return true;
             }
 
@@ -851,21 +921,14 @@ group by A.Sequence order by A.Sequence").Rows)
             dtAllotment.Columns.Add("Rank");
 
             foreach (var wl in WaitListArrayNew)
-            {
-
+            {               
                 wlKeyElements = wl.Key.Split('.');
                 sequence = wl.Key.Substring(wlKeyElements[0].Length + wlKeyElements[1].Length + 2);
                 dtDereserve.Rows.Add(new object[] { iterationSeq, wlKeyElements[0], wlKeyElements[1], sequence, Seats[wl.Key], wl.Value.size(), 0, 0 });
                 foreach (WaitListNodeNew cand in wl.Value.ToList())
                 {
-                    if (cand.rollNo == "241250100364")
-                    {
-                        var s = cand.rollNo;
-                    }
                     dtAllotment.Rows.Add(new object[] { iterationSeq, cand.rollNo, wlKeyElements[0], wlKeyElements[1], sequence, cand.rank });
                 }
-
-
             }
 
             objSql.SaveTableUsingBulkCopy(ref dtAllotment, "XT_Allotted", 500);

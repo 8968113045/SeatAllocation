@@ -242,5 +242,10 @@ namespace DASeatAllocation
         {
 
         }
+
+        private void txtDBName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

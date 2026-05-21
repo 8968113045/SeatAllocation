@@ -10,13 +10,11 @@ namespace AppFrameworkNew
     {
         public string rollNo;
         public double rank;
-        public int retainStatus;
 
-        public WaitListNodeNew(string rollNo, double rank, int retainStatus)
+        public WaitListNodeNew(string rollNo, double rank)
         {
             this.rollNo = rollNo;
             this.rank = rank;
-            this.retainStatus = retainStatus;
         }
 
         // Max-heap behavior:
@@ -27,11 +25,6 @@ namespace AppFrameworkNew
 
             if (rankCompare != 0)
                 return rankCompare;
-
-            int retainCompare = this.retainStatus.CompareTo(other.retainStatus);
-
-            if (retainCompare != 0)
-                return retainCompare;
 
             return string.Compare(this.rollNo, other.rollNo, StringComparison.Ordinal);
         }

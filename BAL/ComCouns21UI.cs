@@ -16,7 +16,7 @@ namespace BAL
             return "Seat Allocation";
         }
 
-        public override ActionOutput Validate(string boardId, string userId, string password, int roundno)
+        public override ActionOutput Validate(string userId, string password, int roundno)
         {
             //select 1 from Administrator where Role in ('BOARDADMIN','NICADMIN') and isActive='Y' and  UserId='LOVEE.ARORA' and HashPass=CONVERT(NVARCHAR(64),HashBytes('sha2_256', 'Ccmt@nic2019'),2)
             

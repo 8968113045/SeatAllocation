@@ -28,7 +28,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
                 DataTable dt = objDownload.GetEligibleCandiate(AppConfiguration.RoundNo);
 
                 if (dt != null)
@@ -57,7 +57,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
                 DataTable dt = objDownload.PSeatBeforeProcessing(AppConfiguration.RoundNo);
 
                 if (dt != null)
@@ -86,7 +86,7 @@ namespace DASeatAllocation
         {
             try
             { 
-            IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+            IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
             DataTable dt = objDownload.GetChoice(AppConfiguration.RoundNo);
 
             if (dt != null)
@@ -115,7 +115,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
                 DataTable dt = objDownload.GetAllotment(AppConfiguration.RoundNo);
 
                 if (dt != null)
@@ -144,7 +144,7 @@ namespace DASeatAllocation
         {
             try
             { 
-            IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+            IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
             DataTable dt = objDownload.GetAllotmentSummary(AppConfiguration.RoundNo);
 
             if (dt != null)
@@ -173,7 +173,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
                 DataTable dt = objDownload.PSeatAfterProcessing(AppConfiguration.RoundNo);
 
                 if (dt != null)
@@ -202,7 +202,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IDownload objDownload = ObjectFactory.GetDownloadObject(AppConfiguration.RoundNo);
                 DataTable dt = objDownload.GetORCR(AppConfiguration.RoundNo);
 
                 if (dt != null)

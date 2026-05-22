@@ -9,9 +9,9 @@ namespace BAL
         public abstract string GetHeader();
         public abstract string GetSubheader();
 
-        public virtual ActionOutput Validate(string boardId, string userId, string password, int roundno)
+        public virtual ActionOutput Validate(string userId, string password, int roundno)
         {
-            DataTable dt = new DAL().GetDataTableUsingCommand("Select boardId,userId,pwd,maxRoundNo,userRole from dbo.XT_Administrator where boardId='" + boardId + "' and userId='" + userId + "' and pwd='" + password + "'");
+            DataTable dt = new DAL().GetDataTableUsingCommand("Select userId,pwd,maxRoundNo,userRole from dbo.XT_Administrator where userId='" + userId + "' and pwd='" + password + "'");
             if (dt == null || dt.Rows.Count == 0)
             {
                 return new ActionOutput(ActionStatus.Failed, "Kindly enter login credentials");

@@ -1,5 +1,6 @@
 ﻿using AppFramework;
 using BAL;
+using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,24 +43,26 @@ namespace DASeatAllocation
                 return;
             }
 
-            IUserInterface obj = ObjectFactory.GetUIObject(cmbBoardId.SelectedItem.ToString(), Convert.ToInt32(cmbRound.SelectedItem));
-            ActionOutput res = obj.Validate(cmbBoardId.SelectedItem.ToString(),txtUserId.Text.Trim(), txtPwD.Text.Trim(), Convert.ToInt32(cmbRound.SelectedItem));
+            IUserInterface obj = ObjectFactory.GetUIObject( Convert.ToInt32(cmbRound.SelectedItem));
+            ActionOutput res = obj.Validate(txtUserId.Text.Trim(), txtPwD.Text.Trim(), Convert.ToInt32(cmbRound.SelectedItem));
 
             if (res.resultType!=ActionStatus.Success){
                 MessageBox.Show("Kindly enter login credentials");
                 return;
             }
             else if (res.resultType==ActionStatus.Success)
-            {
-                AppConfiguration.BoardId = cmbBoardId.SelectedItem.ToString();
+            {                
                 AppConfiguration.UserId = txtUserId.Text.Trim();
                 AppConfiguration.Role = res.data.ToString();
+
+                AppConfiguration.BoardId = Convert.ToString(((DataRowView)comboBox1.SelectedItem)["boardId"]);
                 AppConfiguration.RoundNo = Convert.ToInt32(cmbRound.SelectedItem);
                 AppConfiguration.Stream = Convert.ToInt32(((DataRowView)comboBox1.SelectedItem)["id"]);
+
                 DAL.boardId = AppConfiguration.BoardId;
                 DAL.roundNo = AppConfiguration.RoundNo;
                 ICommon objCommon = ObjectFactory.GetCommonObject();
-                IUserInterface objUI = ObjectFactory.GetUIObject(DAL.boardId, DAL.roundNo);
+                IUserInterface objUI = ObjectFactory.GetUIObject(DAL.roundNo);
                 AppConfiguration.Header = objUI.GetHeader();
                 AppConfiguration.SubHeader = objUI.GetSubheader();
                 this.Close();
@@ -145,25 +148,16 @@ namespace DASeatAllocation
                 DisbaleLoginPanel("Login cradentials are not exist in database!.");
                 return;
             }
-
-            cmbBoardId.Items.Clear();
-            foreach (DataRow dr in dt.Rows)
-            {
-                cmbBoardId.Items.Add(dr["boardId"].ToString());
-            }
-            cmbBoardId.SelectedIndex = 0;
-
-            if (cmbBoardId.Items.Count == 1)
-                LoadBoardDetails(cmbBoardId.SelectedItem.ToString());
-
-
+            
+            LoadBoardDetails();
+            LoadStreams();
         }
 
         int maxRoundNo;
         string pwd;
-        private void LoadBoardDetails(string boardId)
+        private void LoadBoardDetails()
         {
-            DataRow dr = objDAL.GetDataTableUsingCommand("Select boardId,pwd,maxRoundNo from dbo.XT_Administrator where boardId='" + boardId + "'").Rows[0];
+            DataRow dr = objDAL.GetDataTableUsingCommand("Select top 1 boardId,pwd,maxRoundNo from dbo.XT_Administrator").Rows[0];
             maxRoundNo = Convert.ToInt32(dr["maxRoundNo"]);
             pwd = dr["pwd"].ToString();
 
@@ -175,14 +169,14 @@ namespace DASeatAllocation
             cmbRound.SelectedIndex = 0;
         }
 
-        private void LoadStreams(string boardId)
+        private void LoadStreams()
         {
-            DataTable dt = objDAL.GetDataTableUsingCommand("select id, description from MD_Stream WHERE boardId ='" + boardId + "'");
+            DataTable dt = objDAL.GetDataTableUsingCommand("select id, boardId, description from MD_Stream order by boardId");
             if(dt != null && dt.Rows.Count > 0)
             {
                 comboBox1.DataSource = dt;
                 comboBox1.DisplayMember = "description";
-                comboBox1.ValueMember = "id";
+                //comboBox1.ValueMember = "id";
             }
         }
 
@@ -198,8 +192,8 @@ namespace DASeatAllocation
 
         private void cmbBoardId_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadBoardDetails(cmbBoardId.SelectedItem.ToString());
-            LoadStreams(cmbBoardId.SelectedItem.ToString());
+            LoadBoardDetails();
+            LoadStreams();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -235,7 +229,7 @@ namespace DASeatAllocation
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            this.textBox1.Text = Convert.ToString(((DataRowView)comboBox1.SelectedItem)["boardId"]);            
         }
 
         private void gbLogin_Enter(object sender, EventArgs e)
@@ -244,6 +238,16 @@ namespace DASeatAllocation
         }
 
         private void txtDBName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtUserId_TextChanged(object sender, EventArgs e)
         {
 
         }

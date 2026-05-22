@@ -25,8 +25,7 @@ namespace DASeatAllocation
             InitializeComponent();
             objCommon = ObjectFactory.GetCommonObject();
             //IUserInterface objUI = ObjectFactory.GetUIObject(boardId, DAL.roundNo);
-
-            boardId = AppConfiguration.BoardId;
+            
             lblHeader.Text = AppConfiguration.Header;
             lblSubheader.Text = AppConfiguration.SubHeader;
             tblAllotmentOverview.Visible = false;
@@ -35,13 +34,14 @@ namespace DASeatAllocation
             {
                 roundno = AppConfiguration.RoundNo;
                 stream = AppConfiguration.Stream;
+                boardId = AppConfiguration.BoardId;
             }
             catch (Exception ex)
             {
                 lblMessage.Text = "Invalid roundno.";
                 return;
             }
-            objAllocation = ObjectFactory.GetAllocationObject(boardId, roundno);
+            objAllocation = ObjectFactory.GetAllocationObject(roundno);
             //txtRoundNo.Text = AppConfiguration.RoundNo.ToString();
             //txtRoundNo.Enabled = false;
         }
@@ -67,7 +67,7 @@ namespace DASeatAllocation
                     
             
 
-            objAllocation.InItAllocation(roundno, stream);
+            objAllocation.InItAllocation(roundno, stream, boardId);
 
             objAllocation.PrepareEligibleCandidate();
             objResponse = objAllocation.PrepareSeat();

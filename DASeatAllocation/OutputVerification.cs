@@ -9,7 +9,7 @@ namespace DASeatAllocation
 {
     public partial class OutputVerification : Form
     {
-        IAllocation obj = ObjectFactory.GetAllocationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+        IAllocation obj = ObjectFactory.GetAllocationObject(AppConfiguration.RoundNo);
         public OutputVerification()
         {
             InitializeComponent();
@@ -22,7 +22,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
                 ActionOutput res = objValidation.TotalSeatsWithAllotted(AppConfiguration.RoundNo);
                 ((Button)sender).BackColor = AppConfiguration.GetStatusColor(res.resultType);
                 wbMessages.DocumentText += "<h3 style='padding-bottom:5px; margin-bottom:2px;'> Total seats Vs Allotted seats : <span style='color:" + AppConfiguration.GetStatusColor(res.resultType).Name + ";'>" + AppConfiguration.GetStatusTitle(res.resultType) + "</span> </h3> <i>  " + res.message + "</i>";
@@ -34,7 +34,7 @@ namespace DASeatAllocation
             }
 
 
-            //IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+            //IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
             //CustomeResponse res = objValidation.ChoiceWithSeatMatrix(AppConfiguration.RoundNo);
 
             //wbMessages.DocumentText += "<span style='color:" + GetStatusColor(res.Code).Name + "'> <br/><b>Filled Choice : </b>" + GetStatusTitle(res.Code) + " " + res.Message + "</span>";
@@ -46,7 +46,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
                 ActionOutput res = objValidation.OldRetainCandidateAllocation(AppConfiguration.RoundNo);
                 ((Button)sender).BackColor = AppConfiguration.GetStatusColor(res.resultType);
                 wbMessages.DocumentText += "<h3 style='padding-bottom:5px; margin-bottom:2px;'> Previous retained candidates : <span style='color:" + AppConfiguration.GetStatusColor(res.resultType).Name + ";'>" + AppConfiguration.GetStatusTitle(res.resultType) + "</span> </h3> <i>  " + res.message + "</i>";
@@ -61,7 +61,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
                 ActionOutput res = objValidation.Dereservation(AppConfiguration.RoundNo);
                 ((Button)sender).BackColor = AppConfiguration.GetStatusColor(res.resultType);
 
@@ -88,7 +88,7 @@ namespace DASeatAllocation
         {
             try
             {
-                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IValidation objValidation = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
                 DataTable dt = objValidation.RankViolation(AppConfiguration.RoundNo);
                 ActionStatus status = ActionStatus.Success;
                 StringBuilder text = new StringBuilder();
@@ -168,7 +168,7 @@ namespace DASeatAllocation
         private string GetCandidateDetails(string rollno)
         {
             StringBuilder text = new StringBuilder();
-            IAllocation obj = ObjectFactory.GetAllocationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+            IAllocation obj = ObjectFactory.GetAllocationObject(AppConfiguration.RoundNo);
             obj.SetRoundNo(AppConfiguration.RoundNo);
 
 
@@ -316,7 +316,7 @@ namespace DASeatAllocation
 
                 text.Append("<br/>");
 
-                IValidation obj1 = ObjectFactory.GetValidationObject(AppConfiguration.BoardId, AppConfiguration.RoundNo);
+                IValidation obj1 = ObjectFactory.GetValidationObject(AppConfiguration.RoundNo);
                 using (DataTable dt = obj1.ValidateVChoiceWithAllotmentSummary(AppConfiguration.RoundNo, txtRollNo.Text.Trim()))
                 {
                     if (dt != null && dt.Rows.Count > 0)

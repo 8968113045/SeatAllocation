@@ -64,7 +64,7 @@ namespace BAL
 
         public ComCouns21Allocation() : base()
         {
-            boardId = "159012621";
+            boardId = board;
             connectionString = ObjectFactory.GetCommonObject().GetConnectionString();
         }
 
@@ -73,7 +73,7 @@ namespace BAL
         {
             SqlParameter[] sqlParameters = new SqlParameter[3];
             sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, "159012621");
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PrepareSeat, sqlParameters);
             int totalSeat = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(sum(tseat),0) from XT_Seat").Tables[0].Rows[0][0]);
@@ -84,7 +84,7 @@ namespace BAL
         {
             SqlParameter[] sqlParameters = new SqlParameter[3];
             sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, "159012621");
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PrepareEligibleCandidate_New, sqlParameters);
             int eligibleCandidateCount = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_EligibleCandidate").Tables[0].Rows[0][0]);

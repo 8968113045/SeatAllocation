@@ -9,7 +9,7 @@ namespace AppFramework
 {
     public interface IAllocation
     {
-        ActionOutput InItAllocation(int roundno, int stream);         
+        ActionOutput InItAllocation(int roundno, int stream, string boardId);         
         ActionOutput PrepareSeat();
         ActionOutput PrepareEligibleCandidate();
         ActionOutput PreparePreviousAllotment();

@@ -16,10 +16,12 @@ namespace BAL
         protected AllocationSqlHelper objSql = null;
         protected int roundNo = -1;
         protected int stream = -1;
-        public virtual ActionOutput InItAllocation(int roundNo, int stream)
+        protected string board = "";
+        public virtual ActionOutput InItAllocation(int roundNo, int stream, string boardId)
         {
             this.roundNo = roundNo;
             this.stream = stream;
+            this.board = boardId;
             objSql = new AllocationSqlHelper();
             objSql.StartConnection();
             return new ActionOutput(ActionStatus.Success, "");

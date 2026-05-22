@@ -8,7 +8,7 @@ namespace AppFramework
 {
     public interface IUserInterface
     {
-        ActionOutput Validate(string boardId,string userId, string password, int roundno);
+        ActionOutput Validate(string userId, string password, int roundno);
         string GetHeader();
         string GetSubheader();
     }

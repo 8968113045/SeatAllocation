@@ -356,7 +356,7 @@
             this.btnChoiceBRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChoiceBRules.Location = new System.Drawing.Point(3, 43);
             this.btnChoiceBRules.Name = "btnChoiceBRules";
-            this.btnChoiceBRules.Size = new System.Drawing.Size(295, 34);
+            this.btnChoiceBRules.Size = new System.Drawing.Size(296, 34);
             this.btnChoiceBRules.TabIndex = 11;
             this.btnChoiceBRules.Text = "Choice with business rules";
             this.btnChoiceBRules.UseVisualStyleBackColor = false;
@@ -371,7 +371,7 @@
             this.btnChoiceMatchSeatMatrix.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChoiceMatchSeatMatrix.Location = new System.Drawing.Point(3, 3);
             this.btnChoiceMatchSeatMatrix.Name = "btnChoiceMatchSeatMatrix";
-            this.btnChoiceMatchSeatMatrix.Size = new System.Drawing.Size(295, 34);
+            this.btnChoiceMatchSeatMatrix.Size = new System.Drawing.Size(296, 34);
             this.btnChoiceMatchSeatMatrix.TabIndex = 10;
             this.btnChoiceMatchSeatMatrix.Text = "Choice and Seat Matrix matching";
             this.btnChoiceMatchSeatMatrix.UseVisualStyleBackColor = false;
@@ -642,7 +642,7 @@
             this.lblNote.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.lblNote.Location = new System.Drawing.Point(10, 0);
             this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(588, 16);
+            this.lblNote.Size = new System.Drawing.Size(587, 16);
             this.lblNote.TabIndex = 0;
             this.lblNote.Text = "Varify  Seat matrix , Candidate and choice. Color coding of results is as given b" +
     "elow-";

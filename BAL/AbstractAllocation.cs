@@ -696,12 +696,14 @@ group by A.Sequence order by A.Sequence").Rows)
 
 
             bool isIterationRequired = true;
-            int iterationSeq = 1;
+            int iterationSeq = 0;
             List<string> rollsToRemove = new List<string>();
 
             while (isIterationRequired)
             {
-                foreach(var el in rollsToRemove)
+                iterationSeq++;
+
+                foreach (var el in rollsToRemove)
                 {
                     actualPreviousAllotment.Remove(el);
                     EligibleRoll.Remove(el);
@@ -803,8 +805,7 @@ group by A.Sequence order by A.Sequence").Rows)
                         Seats[prevKey] -= 1;
                         rollsToRemove.Add(roll);
                     }
-                }                
-                iterationSeq++;
+                } 
             }
             SaveIterationResultNew(iterationSeq);
             return new ActionOutput(ActionStatus.Success, "");

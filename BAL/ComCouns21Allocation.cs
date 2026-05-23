@@ -56,7 +56,6 @@ namespace BAL
         protected const string DBParam_CatSubcatOptionsvalue = "availableCatSubCatOption";
         protected const string DBParam_isSeatConversionAllowed = "isSeatConversionAllowed";
         protected const string DBParam_isIterationrequired = "isIterationrequired";
-        protected string boardId;
         protected string connectionString;
 
         protected string DBProc_PrepareEligibleCandidate_New = "XApp_CC_PrepareEligibleCandidate";
@@ -64,7 +63,6 @@ namespace BAL
 
         public ComCouns21Allocation() : base()
         {
-            boardId = board;
             connectionString = ObjectFactory.GetCommonObject().GetConnectionString();
         }
 
@@ -95,7 +93,7 @@ namespace BAL
         {
             SqlParameter[] sqlParameters = new SqlParameter[3];
             sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_PreparePreviousAllotment, sqlParameters);
             int previousAllotment = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_PreviousAllotment").Tables[0].Rows[0][0]);
@@ -107,7 +105,7 @@ namespace BAL
             LoadSeatDetails();
             SqlParameter[] sqlParameters = new SqlParameter[3];
             sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_Virtual_Creation, sqlParameters);
             //int previousAllotment = Convert.ToInt32(SqlHelper.ExecuteDataset(connectionString, CommandType.Text, "select isnull(count(*),0) from XT_PreviousAllotment").Tables[0].Rows[0][0]);
@@ -238,7 +236,7 @@ namespace BAL
                 }
 
                 cmdChoice.Parameters["@" + DBParam_RollNo].SqlValue = candRollNo;
-                cmdChoice.Parameters["@" + DBParam_BoardId].SqlValue = boardId;
+                cmdChoice.Parameters["@" + DBParam_BoardId].SqlValue = board;
                 rdrChoice = cmdChoice.ExecuteReader();
                 while ((rdrChoice.Read()))
                 {
@@ -365,7 +363,7 @@ namespace BAL
                 rdrChoice.Close();
                 if (procOptno > 0)
                 {
-                    dtAllChoices.Rows.Add(new object[] { boardId, roundNo, drCand[DBParam_RollNo].ToString(), 0, procOptno, choices.ToString() });
+                    dtAllChoices.Rows.Add(new object[] { board, roundNo, drCand[DBParam_RollNo].ToString(), 0, procOptno, choices.ToString() });
                     choices.Clear();
                 }
             }
@@ -441,8 +439,8 @@ namespace BAL
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[11];
-                sqlParameters[0] = new SqlParameter("@" + DBParam_RollNo, boardId);
-                sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+                sqlParameters[0] = new SqlParameter("@" + DBParam_RollNo, board);
+                sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
                 sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
                 sqlParameters[2] = new SqlParameter("@" + DBParam_CandCategory, category);
                 sqlParameters[3] = new SqlParameter("@" + DBParam_CandSubcategory, subcategoryList);
@@ -477,7 +475,7 @@ namespace BAL
             SeatRankTypeMapping = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[3];
             sqlParameters[0] = new SqlParameter("@" + DBParam_Stream, stream);
-            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[1] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtSeats = SqlHelper.ExecuteDataset(connectionString, DBProc_GetSeatRankTypeMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtSeats.Rows)
@@ -496,7 +494,7 @@ namespace BAL
         {
             StreamInfoMaster = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtOptions = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetStreamMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtOptions.Rows)
@@ -511,7 +509,7 @@ namespace BAL
         {
             SeatTypeMaster = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtOptions = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetSeatTypeMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtOptions.Rows)
@@ -526,7 +524,7 @@ namespace BAL
         {
             GroupMaster = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtOptions = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetGroupMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtOptions.Rows)
@@ -540,7 +538,7 @@ namespace BAL
         {
             QuotaMaster = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtOptions = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetQuotaMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtOptions.Rows)
@@ -555,7 +553,7 @@ namespace BAL
         {
             GenderMaster = new Dictionary<string, string>();
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             DataTable dtOptions = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetGenderMapping, sqlParameters).Tables[0];
             foreach (DataRow dr in dtOptions.Rows)
@@ -567,7 +565,7 @@ namespace BAL
         public override bool DereserveSeat(int iterationSeq)
         {
             SqlParameter[] sqlParameters = new SqlParameter[4];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             sqlParameters[2] = new SqlParameter("@" + DBParam_isIterationrequired, SqlDbType.VarChar, 10) { Direction = ParameterDirection.Output };
             int status = SqlHelper.ExecuteNonQuery(connectionString, CommandType.StoredProcedure, DBProc_DereserveSeat, sqlParameters);
@@ -580,7 +578,7 @@ namespace BAL
         public override DataTable GetOriginalChoice(string rollno)
         {
             SqlParameter[] sqlParameters = new SqlParameter[3];
-            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, boardId);
+            sqlParameters[0] = new SqlParameter("@" + DBParam_BoardId, board);
             sqlParameters[1] = new SqlParameter("@" + DBParam_RoundNo, roundNo);
             sqlParameters[2] = new SqlParameter("@" + DBParam_RollNo, rollno);
             DataSet ds = SqlHelper.ExecuteDataset(connectionString, CommandType.StoredProcedure, DBProc_GetCandidateAllChoices, sqlParameters);
@@ -598,7 +596,7 @@ namespace BAL
             SqlCommand cmd = new SqlCommand(DBProc_UpdateApplication, connUpdateApp) { CommandType = CommandType.StoredProcedure };
             cmd.Parameters.AddWithValue("@" + DBParam_Stream, stream);
             cmd.Parameters.AddWithValue("@" + DBParam_RoundNo, roundNo);
-            cmd.Parameters.AddWithValue("@" + DBParam_BoardId, boardId);
+            cmd.Parameters.AddWithValue("@" + DBParam_BoardId, board);
             cmd.Parameters.AddWithValue("@" + DBParam_allotmentTable, dtAllotmentTypeTable);
             cmd.Parameters.AddWithValue("@" + DBParam_allotmentSummaryTable, dtAllotmentSummaryTypeTable);
 
@@ -664,7 +662,7 @@ namespace BAL
 
                 //dtAllotmentTypeTable.Rows.Add(new object[] { boardId, roundNo, dr["RollNo"].ToString(), SeatRankTypeMapping[wlKey].Substring(3), dr["rank"].ToString(), dr["instcd"].ToString(), dr["brcd"].ToString(), WLElements[0], WLElements[1], WLElements[2], WLElements[4] + WLElements[5], WLElements[3], WLElements[6] });
                 dtAllotmentTypeTable.Rows.Add(new object[] 
-                { boardId, roundNo, dr["RollNo"].ToString(), SeatRankTypeMapping[wlKey].ToString(), dr["rank"].ToString(), dr["instcd"].ToString(), dr["brcd"].ToString(),
+                { board, roundNo, dr["RollNo"].ToString(), SeatRankTypeMapping[wlKey].ToString(), dr["rank"].ToString(), dr["instcd"].ToString(), dr["brcd"].ToString(),
                     WLElements[0], WLElements[1], WLElements[2], WLElements[4] , WLElements[3], WLElements[5] });
 
 
@@ -689,7 +687,7 @@ namespace BAL
                     //dr["OpeningRank_NewCand"].ToString(),dr["ClosingRank_NewCand"].ToString(),dr["DereserveFrom"].ToString(),dr["DereserveTo"].ToString() });
 
                     //change by joginder
-                    dtAllotmentSummaryTypeTable.Rows.Add(new object[] { boardId, roundNo, dr["instcd"].ToString(), dr["brcd"].ToString(), 
+                    dtAllotmentSummaryTypeTable.Rows.Add(new object[] { board, roundNo, dr["instcd"].ToString(), dr["brcd"].ToString(), 
 
                     WLElements[0], WLElements[1], WLElements[2], WLElements[3], WLElements[4], "", WLElements[5],
 

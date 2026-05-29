@@ -370,7 +370,7 @@
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(144, 21);
             this.txtDBName.TabIndex = 2;
-            this.txtDBName.Text = "PSBTECOUNS2018_Renew_Test";
+            this.txtDBName.Text = "PSBTEDiploma_Main2026";
             this.txtDBName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtDBName.TextChanged += new System.EventHandler(this.txtDBName_TextChanged);
             // 

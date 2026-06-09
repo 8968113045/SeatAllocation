@@ -348,7 +348,7 @@
             this.txtServerDB.Name = "txtServerDB";
             this.txtServerDB.Size = new System.Drawing.Size(144, 21);
             this.txtServerDB.TabIndex = 1;
-            this.txtServerDB.Text = "(localdb)\\MSSQLLocalDB";
+            this.txtServerDB.Text = "HP\\SQLEXPRESS";
             // 
             // label10
             // 

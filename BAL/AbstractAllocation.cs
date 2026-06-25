@@ -687,6 +687,14 @@ group by A.Sequence order by A.Sequence").Rows)
                     }
 
                     string prevKey = allotmentDetail.Instcd + "." + allotmentDetail.Brcd + "." + seq;
+                    //if (Seats.ContainsKey(prevKey))
+                    //{
+                    //    Seats[prevKey] += 1;
+                    //}
+                    //else
+                    //{
+                    //    Seats[prevKey] = 1;
+                    //}
                     Seats[prevKey] += 1;
                 }
 
